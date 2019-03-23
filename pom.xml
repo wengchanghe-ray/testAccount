@@ -4,7 +4,7 @@
   <artifactId>testAccount</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
-  <name>testAccount</name>
+  <name>testAccount</name><!--test-->
 <!--test-->  
 <!--cc-->  
   	<dependencies>
