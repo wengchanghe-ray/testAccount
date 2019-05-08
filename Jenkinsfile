@@ -8,20 +8,26 @@ def option3 = 'both'
 
 def getAutoDeploy() {
     if (env.BRANCH_NAME == 'develop') {
-        booleanParam(defaultValue: true, description: 'Auto deploy when build is successful?', name: 'autoDeploy')
+        booleanParam(defaultValue: true, description: '111Auto deploy when build is successful?', name: 'autoDeploy')
     } else {
-        booleanParam(defaultValue: false, description: 'Auto deploy when build is successful?', name: 'autoDeploy')
+        booleanParam(defaultValue: false, description: '222Auto deploy when build is successful?', name: 'autoDeploy')
     }
 }
 
-properties([
+/*properties([
     parameters([
         getAutoDeploy(),
-        string(defaultValue: 'ap-south-1', description: 'AWS Region', name: 'region')
+        string(defaultValue: '3333ap-south-1', description: 'AWS Region', name: 'region')
     ]),
     buildDiscarder(logRotator(artifactNumToKeepStr: '30', numToKeepStr: '30')),
     pipelineTriggers([pollSCM('*/5 * * * *')])
-])
+])*/
+    parameters([
+        getAutoDeploy(),
+        string(defaultValue: '3333ap-south-1', description: 'AWS Region', name: 'region')
+    ])
+    buildDiscarder(logRotator(artifactNumToKeepStr: '30', numToKeepStr: '30'))
+    pipelineTriggers([pollSCM('*/5 * * * *')])
 
 node {
     echo "${env.BRANCH_NAME}"
