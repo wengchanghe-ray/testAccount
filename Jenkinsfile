@@ -18,9 +18,13 @@ properties([
 ])
 
 node {
-   
+   checkout scm
+   def autoDeploy = params.autoDeploy
 
-   stage("Sample") {
-	echo "${env.BRANCH_NAME}"
+   echo "${env.BRANCH_NAME}"
+   echo "${autoDeploy}"
+
+   if(autoDeploy) {
+      echo "To deploy!"
    }
 }
