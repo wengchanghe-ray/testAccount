@@ -1,6 +1,4 @@
 #!/usr/bin/env groovy
-
-#!/usr/bin/env groovy
 import org.jenkinsci.plugins.workflow.steps.FlowInterruptedException
 def option1 = 'realtime'
 def option2 = 'batch'
@@ -14,20 +12,14 @@ def getAutoDeploy() {
     }
 }
 
-/*properties([
+properties([
     parameters([
         getAutoDeploy(),
         string(defaultValue: '3333ap-south-1', description: 'AWS Region', name: 'region')
     ]),
     buildDiscarder(logRotator(artifactNumToKeepStr: '30', numToKeepStr: '30')),
     pipelineTriggers([pollSCM('*/5 * * * *')])
-])*/
-    parameters([
-        getAutoDeploy(),
-        string(defaultValue: '3333ap-south-1', description: 'AWS Region', name: 'region')
-    ])
-    buildDiscarder(logRotator(artifactNumToKeepStr: '30', numToKeepStr: '30'))
-    pipelineTriggers([pollSCM('*/5 * * * *')])
+])
 
 node {
     echo "${env.BRANCH_NAME}"
