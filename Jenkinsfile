@@ -23,8 +23,10 @@ node {
 
    echo "${env.BRANCH_NAME}"
    echo "${autoDeploy}"
+   def aa= env.BRANCH_NAME in ["master", "develop"]
+   echo "${aa}"
 
-   if(autoDeploy) {
+   if(autoDeploy && env.BRANCH_NAME in ["master", "develop"]) {
       echo "To deploy!"
    }
 }
