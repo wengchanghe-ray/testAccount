@@ -40,7 +40,7 @@ node {
     
     if(params.autoDeploy) {
         if(currentBuild.result==null || currentBuild.result==true) {
-            if(env.BRANCH_NAME=='master' || env.BRANCH_NAME.startsWith('hotfix') {
+            if(env.BRANCH_NAME=='master' || env.BRANCH_NAME.startsWith('hotfix')) {
                 try {
                     timeout(time: 4, unit: 'HOURS') {
                         env.ENV_DEPLOY_NAME = input message: 'User input required',
