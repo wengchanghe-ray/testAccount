@@ -1,5 +1,11 @@
 #!/usr/bin/env groovy
 
+#!/usr/bin/env groovy
+import org.jenkinsci.plugins.workflow.steps.FlowInterruptedException
+def option1 = 'realtime'
+def option2 = 'batch'
+def option3 = 'both'
+
 def getAutoDeploy() {
     if (env.BRANCH_NAME == 'develop') {
         booleanParam(defaultValue: true, description: 'Auto deploy when build is successful?', name: 'autoDeploy')
@@ -18,15 +24,43 @@ properties([
 ])
 
 node {
-   checkout scm
-   def autoDeploy = params.autoDeploy
+    echo "${env.BRANCH_NAME}"
+    
+    checkout scm
 
-   echo "${env.BRANCH_NAME}"
-   echo "${autoDeploy}"
-   def aa= env.BRANCH_NAME in ["master", "develop"]
-   echo "${aa}"
-
-   if(autoDeploy && env.BRANCH_NAME in ["master", "develop"]) {
-      echo "To deploy!"
-   }
+    stage('Clean') {
+        echo 'Cleanning....'
+    }
+    
+    stage('Test') {
+        echo 'Testing....'
+    }
+    
+    stage('Build') {
+        echo 'Building....'
+    }
+    
+    if(params.autoDeploy) {
+        if(currentBuild.result==null || currentBuild.result==true) {
+            if(env.BRANCH_NAME=='master' || env.BRANCH_NAME.startsWith('hotfix') {
+                try {
+                    timeout(time: 4, unit: 'HOURS') {
+                        env.ENV_DEPLOY_NAME = input message: 'User input required',
+                                ok: 'Deploy!',
+                                parameters: [choice(name: 'Branch to deploy', choices: "${option1}\n${option2}\n${option3}", description: 'What Beanstalk environment you want deploy to?')]
+                        echo "Env: ${env.ENV_DEPLOY_NAME} ..."
+                    }
+                } catch(FlowInterruptedException e) {
+                    echo "Flow interrupted ${ex}"
+                    currentBuild.result = "ABORTED"
+                    //shouldDeploy = false
+                }
+            }
+            
+            stage('Deploy') {
+                echo 'Deploying....${ENV_DEPLOY_NAME}'
+            }
+        }
+    }
 }
+
