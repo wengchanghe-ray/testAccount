@@ -35,7 +35,7 @@ node {
 
     if (currentBuild.result == null || currentBuild.result == true) {
         if (params.autoDeploy == true) {
-            def shouldDeploy = getDeploymentEnv('dev1/dev2')
+            def shouldDeploy = getDeploymentEnv("dev1\ndev2")
 
             if(shouldDeploy) {
                 stage('Deploy') {
