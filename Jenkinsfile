@@ -35,33 +35,35 @@ node {
 
     if (currentBuild.result == null || currentBuild.result == true) {
         if (params.autoDeploy == true) {
-            def shouldDeploy = true
-            try {
-
-                timeout(time: 1, unit: 'HOURS') {
-                    env.DEPLOY_ENV = input messages: 'User input required',
-                            ok: 'Go',
-                            parameters: [
-                                    choice(name: 'Branch to deploy', choices: 'dev1\ndev2', description: 'What Beanstalk environment you want deploy to?')
-                            ]
-                }
-            }
-            catch (FlowInterruptedException ex) {
-                echo "Flow interrupted ${ex}"
-                currentBuild.result = "ABORTED"
-                shouldDeploy = false
-
-                echo "Can process here after ABORTED?"
-            }
-
-            echo "Move on1?"
+            def shouldDeploy = getDeploymentEnv('dev1/dev2')
 
             if(shouldDeploy) {
                 stage('Deploy') {
-                    echo "Deploying..."
+                    echo "Deploying...${env.DEPLOY_ENV}"
 
                 }
             }
         }
     }
+}
+
+def getDeploymentEnv(availableEnvList) {
+    def shouldDeploy = true
+
+    try {
+        timeout(time: 1, unit: 'MINUTES') {
+            env.DEPLOY_ENV = input messages: 'User input required',
+                    ok: 'Go',
+                    parameters: [
+                            choice(name: 'Branch to deploy', choices: "${availableEnvList}", description: 'What Beanstalk environment you want deploy to?')
+                    ]
+        }
+    }
+    catch (FlowInterruptedException ex) {
+        echo "Flow interrupted ${ex}"
+        currentBuild.result = "ABORTED"
+        shouldDeploy = false
+    }
+
+    return shouldDeploy
 }
