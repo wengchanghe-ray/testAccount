@@ -19,12 +19,13 @@ properties([
         pipelineTriggers([pollSCM('*/5 * * * *')])
 ])
 
-def mvn = "${tool 'mvn-default'}/bin/mvn"
 
 node {
     echo "current branch is ${env.BRANCH_NAME}"
 
     checkout scm
+
+    def mvn = "${tool 'mvn-default'}/bin/mvn"
 
     stage('Build') {
         echo 'Building...'
